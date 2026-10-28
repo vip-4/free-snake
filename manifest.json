@@ -1,0 +1,32 @@
+{
+  "name": "Snake Game Online - Free Classic Snake",
+  "short_name": "Snake",
+  "description": "Play the classic Snake game free in your browser. Arrow keys or swipe to steer. No download, no ads.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "lang": "en",
+  "background_color": "#050807",
+  "theme_color": "#050807",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

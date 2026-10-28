@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇在线玩 – 经典贪吃蛇游戏免费畅玩，无需下载</title>
+    <meta name="description" content="免费在线玩经典贪吃蛇。方向键或滑动控制，吃苹果变长，金苹果50分，越吃越快挑战最高分。无需下载、无广告，手机可玩，成绩本地保存。">
+    <meta name="keywords" content="贪吃蛇, 贪吃蛇在线, 贪吃蛇游戏, 免费贪吃蛇, 经典贪吃蛇, 网页贪吃蛇, HTML5游戏, 小游戏, 免费小游戏, 无需下载游戏, 怀旧游戏, 街机游戏, snake game">
+    <meta name="author" content="Free Snake Game Online">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#050807">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="canonical" href="https://vip-4.github.io/free-snake/zh/">
+    <link rel="alternate" hreflang="en" href="https://vip-4.github.io/free-snake/">
+    <link rel="alternate" hreflang="zh-Hans" href="https://vip-4.github.io/free-snake/zh/">
+    <link rel="alternate" hreflang="x-default" href="https://vip-4.github.io/free-snake/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Free Snake Game Online">
+    <meta property="og:title" content="贪吃蛇在线玩 – 经典贪吃蛇游戏免费畅玩">
+    <meta property="og:description" content="浏览器里的经典贪吃蛇：方向键或滑动控制，吃苹果变长，挑战最高分。无需下载、无广告。">
+    <meta property="og:url" content="https://vip-4.github.io/free-snake/zh/">
+    <meta property="og:image" content="https://vip-4.github.io/free-snake/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="深色网格上一条绿色像素贪吃蛇追逐红苹果，上方有发光的SNAKE标题">
+    <meta property="og:image:secure_url" content="https://vip-4.github.io/free-snake/assets/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="贪吃蛇在线玩 – 经典贪吃蛇游戏免费畅玩">
+    <meta name="twitter:description" content="浏览器里的经典贪吃蛇。方向键或滑动控制，吃苹果变长。无需下载、无广告。">
+    <meta name="twitter:image" content="https://vip-4.github.io/free-snake/assets/og-image.png">
+    <meta name="twitter:image:alt" content="深色网格上绿色像素贪吃蛇追逐红苹果">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="apple-touch-icon" href="../assets/icon-180.png">
+    <link rel="manifest" href="../manifest.json">
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050807;
+  --panel: #0a1410;
+  --green: #39ff6e;
+  --green-dim: #1f7a3d;
+  --red: #ff4d57;
+  --gold: #ffd24d;
+  --text: #d8e8dc;
+  --dim: #8fa89a;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+a { color: var(--green); }
+a:hover { color: #7dff9e; }
+
+header.site {
+  border-bottom: 1px solid var(--green-dim);
+  padding: 18px 0 14px;
+  background: linear-gradient(180deg, #0c1a12 0%, var(--bg) 100%);
+}
+header.site .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+header.site h1 a { color: var(--green); text-decoration: none; font-size: 1.25rem; }
+nav.toc a { margin-left: 14px; font-size: .93rem; text-decoration: none; }
+nav.toc a:first-child { margin-left: 0; }
+
+/* Board */
+.board-frame {
+  background: linear-gradient(180deg, #0e2418 0%, var(--panel) 100%);
+  border: 2px solid var(--green-dim);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 26px 0 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.5), inset 0 0 0 3px rgba(57,255,110,.08);
+}
+.board-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.stat { font-size: 1.02rem; color: var(--dim); }
+.stat strong { color: var(--green); font-variant-numeric: tabular-nums; font-size: 1.15rem; }
+
+#board {
+  display: block; margin: 0 auto;
+  width: 480px; max-width: 100%;
+  height: auto; aspect-ratio: 1 / 1;
+  background: #050807;
+  border: 2px solid var(--green-dim);
+  border-radius: 10px;
+  touch-action: none;
+}
+
+.board-controls { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.btn {
+  background: var(--green); color: #050807; border: none; border-radius: 12px;
+  padding: 12px 28px; font: inherit; font-size: 1.05rem; font-weight: 800; letter-spacing: 1px; cursor: pointer;
+  box-shadow: 0 4px 0 #1f7a3d;
+}
+.btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #1f7a3d; }
+.btn.secondary { background: #10261a; color: var(--text); box-shadow: 0 4px 0 #081209; padding: 10px 16px; font-size: .95rem; }
+.btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+#message { text-align: center; min-height: 1.4em; margin: 12px 0 2px; font-weight: 700; }
+#message.win { color: var(--gold); }
+#message.lose { color: var(--red); }
+.stage-hint { text-align: center; color: var(--dim); font-size: .9rem; margin-bottom: 8px; }
+kbd {
+  background: #10261a; border: 1px solid var(--green-dim); border-bottom-width: 2px;
+  border-radius: 5px; padding: 1px 7px; font-family: Consolas, monospace; font-size: .88em;
+}
+
+main section { margin: 44px 0; }
+h2 { color: var(--green); font-size: 1.45rem; margin-bottom: 12px; }
+.content { color: var(--dim); max-width: 800px; }
+.content p { margin: 10px 0; }
+ol, ul { padding-left: 1.4rem; margin: 10px 0; }
+li { margin: 4px 0; }
+dl.controls > div, dl.faq > div { margin-bottom: 16px; }
+dl.controls dt { font-weight: 700; color: var(--green); }
+dl.controls dd, dl.faq dd { color: var(--dim); }
+dl.faq dt { font-weight: 700; color: var(--text); }
+table.score-table { border-collapse: collapse; width: 100%; max-width: 640px; font-size: .98rem; margin: 10px 0; }
+table.score-table th, table.score-table td { padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--green-dim); }
+table.score-table thead th { color: var(--green); border-bottom: 2px solid var(--green-dim); }
+table.score-table td:last-child, table.score-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.notice {
+  border: 1px solid var(--green-dim); border-left: 4px solid var(--green);
+  border-radius: 10px; padding: 12px 16px; background: rgba(57,255,110,.05); max-width: 800px;
+}
+.keyline { color: var(--dim); font-size: .95rem; }
+
+footer.site {
+  border-top: 1px solid var(--green-dim); margin-top: 48px; padding: 26px 6px;
+  color: var(--dim); font-size: .93rem; text-align: center;
+}
+.lang-nav { font-size: .95rem; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 0; background: var(--green); color: #050807;
+  padding: 8px 14px; border-radius: 0 0 8px 0; z-index: 10; font-weight: 700;
+}
+.skip-link:focus { left: 0; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+</style>
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://vip-4.github.io/free-snake/#website",
+        "url": "https://vip-4.github.io/free-snake/",
+        "name": "Free Snake Game Online",
+        "inLanguage": ["zh-Hans", "en"],
+        "publisher": { "@id": "https://vip-4.github.io/free-snake/#org" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://vip-4.github.io/free-snake/#org",
+        "name": "Free Snake Game Online",
+        "url": "https://vip-4.github.io/free-snake/",
+        "logo": { "@type": "ImageObject", "url": "https://vip-4.github.io/free-snake/favicon.svg" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://vip-4.github.io/free-snake/#webpage",
+        "url": "https://vip-4.github.io/free-snake/zh/",
+        "name": "贪吃蛇在线玩 – 经典贪吃蛇游戏免费畅玩",
+        "description": "免费在线玩经典贪吃蛇。方向键或滑动控制，吃苹果变长，金苹果50分，越吃越快挑战最高分。无需下载、无广告，手机可玩，成绩本地保存。",
+        "isPartOf": { "@id": "https://vip-4.github.io/free-snake/#website" },
+        "inLanguage": "zh-Hans",
+        "about": { "@id": "https://vip-4.github.io/free-snake/#game" },
+        "primaryImageOfPage": { "@id": "https://vip-4.github.io/free-snake/#primaryimage" },
+        "significantLink": "https://vip-4.github.io/free-snake/"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "ImageObject",
+        "@id": "https://vip-4.github.io/free-snake/#primaryimage",
+        "url": "https://vip-4.github.io/free-snake/assets/og-image.png",
+        "width": 1200,
+        "height": 630,
+        "caption": "深色网格上一条绿色像素贪吃蛇追逐红苹果，上方有发光的SNAKE标题"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "@id": "https://vip-4.github.io/free-snake/#game",
+        "name": "贪吃蛇在线版",
+        "alternateName": ["Snake Game Online", "贪吃蛇网页版", "经典贪吃蛇"],
+        "description": "浏览器中的免费经典贪吃蛇游戏，24×24网格。方向键、WASD或触屏滑动控制方向，吃红苹果变长得分，金苹果价值50分，蛇随进食逐渐加速。经典规则：撞墙或撞到自己即结束。最高分保存在浏览器本地。无需下载、注册，无广告，绝无真钱。",
+        "url": "https://vip-4.github.io/free-snake/zh/",
+        "genre": ["街机", "休闲", "复古"],
+        "gamePlatform": "网页浏览器",
+        "applicationCategory": "Game",
+        "operatingSystem": "任意（支持HTML5的浏览器）",
+        "playMode": "SinglePlayer",
+        "datePublished": "2026-10-28",
+        "dateModified": "2026-10-28",
+        "inLanguage": ["zh-Hans", "en"],
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "image": { "@id": "https://vip-4.github.io/free-snake/#primaryimage" },
+        "thumbnailUrl": "https://vip-4.github.io/free-snake/favicon.svg",
+        "publisher": { "@id": "https://vip-4.github.io/free-snake/#org" },
+        "mainEntityOfPage": { "@id": "https://vip-4.github.io/free-snake/#webpage" },
+        "controlMethod": ["Keyboard", "Touch"],
+        "controllerInput": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "W", "A", "S", "D", "Space", "Enter"],
+        "numberOfPlayers": 1,
+        "gameLocation": {
+          "@type": "VirtualLocation",
+          "url": "https://vip-4.github.io/free-snake/zh/"
+        },
+        "softwareRequirements": "需启用JavaScript、支持HTML5的浏览器",
+        "storageRequirements": "无需存储空间（最高分保存在localStorage）",
+        "accessibilityFeature": ["KeyboardControl", "HighContrast", "ScreenReaderCompatible"],
+        "accessibilityControl": ["Keyboard", "Touch"],
+        "accessibilitySummary": "完全支持键盘操作（方向键或WASD移动，空格暂停，回车开始）。游戏状态通过ARIA实时区域播报，全部规则以纯文本形式提供。",
+        "keywords": ["贪吃蛇", "经典贪吃蛇", "免费贪吃蛇", "网页游戏", "HTML5游戏", "街机", "snake game"]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "这个贪吃蛇游戏真的免费吗？",
+            "acceptedAnswer": { "@type": "Answer", "text": "是的。这款在线贪吃蛇在任何现代浏览器中100%免费畅玩。无需下载、无需注册、无广告、无内购。" }
+          },
+          {
+            "@type": "Question",
+            "name": "怎么控制贪吃蛇？",
+            "acceptedAnswer": { "@type": "Answer", "text": "桌面端用方向键或WASD控制方向，空格暂停，回车开始或重开。手机和平板上朝想要的方向滑动即可转向，点击棋盘暂停或开始。" }
+          },
+          {
+            "@type": "Question",
+            "name": "贪吃蛇怎么计分？",
+            "acceptedAnswer": { "@type": "Answer", "text": "每个红苹果10分并让蛇变长一节。每吃到第5个食物会出现价值50分的金苹果。蛇每吃一个苹果都会加速，风险与收益同步上升。" }
+          },
+          {
+            "@type": "Question",
+            "name": "手机上能玩吗？",
+            "acceptedAnswer": { "@type": "Answer", "text": "可以。游戏采用移动优先的响应式设计：在iOS或安卓上于棋盘任意位置滑动即可转向，点击暂停或开始，棋盘会自动适配屏幕大小。" }
+          },
+          {
+            "@type": "Question",
+            "name": "最高分会保存吗？",
+            "acceptedAnswer": { "@type": "Answer", "text": "会。最高分和音效偏好仅保存在你自己的浏览器（localStorage）中，绝不上传，无需账号，不收集任何个人数据。" }
+          },
+          {
+            "@type": "Question",
+            "name": "蛇撞到墙或自己会怎样？",
+            "acceptedAnswer": { "@type": "Answer", "text": "本局立即结束——经典规则，无穿墙。会显示本局得分与最高分，按回车或点击棋盘即可重新开始。" }
+          }
+        ]
+      }
+    ]
+    </script>
+</head>
+<body>
+<a class="skip-link" href="#game">跳到游戏</a>
+<header class="site">
+    <div class="wrap">
+        <h1><a href="https://vip-4.github.io/free-snake/zh/">贪吃蛇在线版</a></h1>
+        <nav class="toc" aria-label="页面导航">
+            <a href="#game">开始游戏</a>
+            <a href="#how-to">玩法说明</a>
+            <a href="#scoring">计分规则</a>
+            <a href="#about">关于游戏</a>
+            <a href="#faq">常见问题</a>
+        </nav>
+    </div>
+</header>
+
+<main class="wrap">
+    <p class="keyline">浏览器里的经典贪吃蛇——吃苹果、变长、别撞墙。免费、无需下载、无广告，键盘触屏皆可。</p>
+
+    <section id="game" aria-label="贪吃蛇游戏区">
+        <div class="board-frame" role="group" aria-label="贪吃蛇棋盘">
+            <div class="board-top">
+                <span class="stat">得分: <strong id="score">0</strong></span>
+                <span class="stat">最高分: <strong id="best">0</strong></span>
+            </div>
+            <canvas id="board" width="480" height="480" aria-label="贪吃蛇棋盘。用方向键控制绿蛇去吃红苹果。"></canvas>
+            <div class="board-controls">
+                <button type="button" class="btn" id="btn-start">开始 / 暂停</button>
+                <button type="button" class="btn secondary" id="btn-sound">音效: 开</button>
+                <button type="button" class="btn secondary" id="btn-new">重新开始</button>
+            </div>
+            <p id="message" class="message" role="status" aria-live="polite">按方向键或回车开始。</p>
+        </div>
+        <p class="stage-hint"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> 或 <kbd>WASD</kbd> 转向 · <kbd>空格</kbd> 暂停 · 触屏滑动</p>
+    </section>
+
+    <section id="how-to">
+        <h2>贪吃蛇玩法说明</h2>
+        <dl class="controls content">
+            <div><dt>1. 开始</dt><dd>按任意方向键、<kbd>回车</kbd> 或点击棋盘。蛇默认向右移动。</dd></div>
+            <div><dt>2. 转向</dt><dd><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> 或 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 控制方向；触屏朝目标方向滑动即可。180°掉头会被自动忽略，不会误撞自己。</dd></div>
+            <div><dt>3. 吃苹果</dt><dd>把蛇引向红苹果——每个加10分并变长一节。金苹果会定期出现，一个值50分。</dd></div>
+            <div><dt>4. 生存</dt><dd>蛇每吃一个苹果都会加速。撞墙或撞到自己即结束——经典规则，无穿墙。<kbd>空格</kbd> 随时暂停。</dd></div>
+        </dl>
+    </section>
+
+    <section id="scoring">
+        <h2>计分与规则</h2>
+        <table class="score-table">
+            <caption class="sr-only">贪吃蛇计分表：项目、分值、效果</caption>
+            <thead><tr><th scope="col">项目</th><th scope="col">分值</th><th scope="col">效果</th></tr></thead>
+            <tbody>
+                <tr><td>🍎 红苹果</td><td>+10</td><td>变长一节，略微加速</td></tr>
+                <tr><td>⭐ 金苹果</td><td>+50</td><td>定期出现，同样变长</td></tr>
+                <tr><td>🧱 撞墙或撞己</td><td>—</td><td>本局结束，最高分已保存</td></tr>
+            </tbody>
+        </table>
+        <p class="content keyline">网格：24 × 24 · 每个苹果加速约3毫秒，步进从140毫秒快至70毫秒 · 最高分仅存于你的浏览器。</p>
+    </section>
+
+    <section id="about">
+        <h2>关于这款贪吃蛇</h2>
+        <div class="notice content">
+            <p><strong>零依赖。</strong>单页原生 JavaScript 游戏——无框架、无追踪、无账号、无广告。完全在浏览器内运行，加载后可离线游玩。</p>
+            <p><strong>数据只属于你。</strong>最高分与设置保存在浏览器的 localStorage 中，绝不上传。</p>
+            <p><strong>人人可玩。</strong>完整键盘支持、高对比配色、读屏友好的状态播报，并为手机平板提供触控操作。</p>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2>常见问题</h2>
+        <dl class="faq content">
+            <div><dt>这个贪吃蛇游戏真的免费吗？</dt><dd>是的。这款在线贪吃蛇在任何现代浏览器中100%免费畅玩。无需下载、无需注册、无广告、无内购。</dd></div>
+            <div><dt>怎么控制贪吃蛇？</dt><dd>桌面端用方向键或WASD控制方向，空格暂停，回车开始或重开。手机和平板上朝想要的方向滑动即可转向，点击棋盘暂停或开始。</dd></div>
+            <div><dt>贪吃蛇怎么计分？</dt><dd>每个红苹果10分并让蛇变长一节。每吃到第5个食物会出现价值50分的金苹果。蛇每吃一个苹果都会加速，风险与收益同步上升。</dd></div>
+            <div><dt>手机上能玩吗？</dt><dd>可以。游戏采用移动优先的响应式设计：在iOS或安卓上于棋盘任意位置滑动即可转向，点击暂停或开始，棋盘会自动适配屏幕大小。</dd></div>
+            <div><dt>最高分会保存吗？</dt><dd>会。最高分和音效偏好仅保存在你自己的浏览器（localStorage）中，绝不上传，无需账号，不收集任何个人数据。</dd></div>
+            <div><dt>蛇撞到墙或自己会怎样？</dt><dd>本局立即结束——经典规则，无穿墙。会显示本局得分与最高分，按回车或点击棋盘即可重新开始。</dd></div>
+        </dl>
+    </section>
+</main>
+
+<footer class="site" role="contentinfo">
+    <p>Free Snake Game Online 是一个娱乐用途的 HTML5 游戏，采用语义化 HTML 与原生 JavaScript 构建——零依赖、移动端友好、无追踪。</p>
+    <p class="lang-nav">🌐 语言：<a href="https://vip-4.github.io/free-snake/" hreflang="en">English（Snake Game Online）</a></p>
+    <p>© 2026 Free Snake Game Online · 仅供娱乐 · 无需下载、无广告</p>
+</footer>
+
+<script>
+window.SNAKE_I18N = {
+  start: "按方向键或回车开始。",
+  idleTitle: "贪吃蛇",
+  overTitle: "游戏结束",
+  overSub: "按回车或点击重开",
+  pauseTitle: "已暂停",
+  pauseHint: "祝好运！空格暂停。",
+  paused: "已暂停——空格或点击继续。",
+  ate: "吃到苹果！+{gain} 分。",
+  golden: "金苹果！+{gain} 分！",
+  gameOver: "游戏结束——得分 {score}。最高分：{best}。",
+  reset: "全新棋盘。按方向键开始。",
+  soundOn: "音效: 开", soundOff: "音效: 关"
+};
+</script>
+<script defer>
+/* Free Snake Game — vanilla JS, zero dependencies
+   24×24 grid, classic rules (walls + self collision), keyboard + swipe, virtual only */
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var T = window.SNAKE_I18N;
+
+  var COLS = 24, ROWS = 24, CELL = 20;        /* canvas 480×480 */
+  var BASE_MS = 140, MIN_MS = 70, SPEEDUP = 3; /* ms per step, faster per food */
+  var START_LEN = 3;
+
+  var state = {
+    snake: [], dir: { x: 1, y: 0 }, queue: [],
+    food: { x: 0, y: 0 }, golden: false,
+    score: 0, best: 0, eaten: 0,
+    mode: 'idle',               /* idle | run | pause | over */
+    sound: true, ms: BASE_MS
+  };
+  var timer = null;
+
+  var canvas, ctx;
+  var el = {};
+  var audio = null;
+
+  /* ---------- persistence ---------- */
+  function load() {
+    try {
+      var b = parseInt(localStorage.getItem('snake_best'), 10);
+      if (b >= 0 && b <= 1000000) state.best = b;
+      if (localStorage.getItem('snake_sound') === '0') state.sound = false;
+    } catch (e) { /* storage unavailable */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem('snake_best', String(state.best));
+      localStorage.setItem('snake_sound', state.sound ? '1' : '0');
+    } catch (e) { /* storage unavailable */ }
+  }
+  function fmt(n) { return Number(n).toLocaleString(); }
+  function say(text, cls) {
+    el.msg.textContent = text;
+    el.msg.className = 'message' + (cls ? ' ' + cls : '');
+  }
+
+  /* ---------- audio ---------- */
+  function beep(freq, dur, type) {
+    if (!state.sound) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      var o = audio.createOscillator(), g = audio.createGain();
+      o.type = type || 'square'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.04, audio.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + dur);
+      o.connect(g); g.connect(audio.destination);
+      o.start(); o.stop(audio.currentTime + dur);
+    } catch (e) { /* audio unavailable */ }
+  }
+
+  /* ---------- game core ---------- */
+  function reset() {
+    state.snake = [{ x: 8, y: 12 }, { x: 7, y: 12 }, { x: 6, y: 12 }];
+    state.dir = { x: 1, y: 0 };
+    state.queue = [];
+    state.score = 0; state.eaten = 0; state.ms = BASE_MS;
+    placeFood();
+    render();
+  }
+  function free(x, y) {
+    for (var i = 0; i < state.snake.length; i++)
+      if (state.snake[i].x === x && state.snake[i].y === y) return false;
+    return true;
+  }
+  function placeFood() {
+    var x, y;
+    do { x = Math.floor(Math.random() * COLS); y = Math.floor(Math.random() * ROWS); } while (!free(x, y));
+    state.food = { x: x, y: y };
+    state.golden = state.eaten > 0 && state.eaten % 5 === 4 ? false : Math.random() < 0.1;
+  }
+  function start() {
+    if (state.mode === 'run') return;
+    if (state.mode === 'over' || state.mode === 'idle') reset();
+    state.mode = 'run';
+    say(T.pauseHint);
+    render();
+    schedule();
+  }
+  function schedule() {
+    clearTimeout(timer);
+    timer = setTimeout(step, state.ms);
+  }
+  function pause() {
+    if (state.mode !== 'run') return;
+    state.mode = 'pause';
+    clearTimeout(timer);
+    say(T.paused);
+    render();
+  }
+  function resume() {
+    if (state.mode !== 'pause') return;
+    state.mode = 'run';
+    say(T.pauseHint);
+    render();
+    schedule();
+  }
+  function gameOver() {
+    state.mode = 'over';
+    clearTimeout(timer);
+    if (state.score > state.best) { state.best = state.score; save(); }
+    beep(330, 0.12); setTimeout(function () { beep(220, 0.18); }, 110); setTimeout(function () { beep(147, 0.25); }, 240);
+    say(T.gameOver.replace('{score}', fmt(state.score)).replace('{best}', fmt(state.best)), 'lose');
+    render();
+  }
+  function step() {
+    if (state.mode !== 'run') return;
+    if (state.queue.length) state.dir = state.queue.shift();
+    var head = { x: state.snake[0].x + state.dir.x, y: state.snake[0].y + state.dir.y };
+    var hitWall = head.x < 0 || head.y < 0 || head.x >= COLS || head.y >= ROWS;
+    var hitSelf = false;
+    for (var i = 0; i < state.snake.length - 1; i++)
+      if (state.snake[i].x === head.x && state.snake[i].y === head.y) { hitSelf = true; break; }
+    if (hitWall || hitSelf) { gameOver(); return; }
+
+    state.snake.unshift(head);
+    if (head.x === state.food.x && head.y === state.food.y) {
+      var gain = state.golden ? 50 : 10;
+      state.score += gain;
+      state.eaten++;
+      state.ms = Math.max(MIN_MS, state.ms - SPEEDUP);
+      if (state.golden) { beep(880, 0.1, 'triangle'); setTimeout(function () { beep(1175, 0.12, 'triangle'); }, 90); }
+      else beep(660, 0.07);
+      say(state.golden ? T.golden.replace('{gain}', String(gain)) : T.ate.replace('{gain}', String(gain)));
+      placeFood();
+    } else {
+      state.snake.pop();
+    }
+    render();
+    schedule();
+  }
+  function steer(nd) {
+    var last = state.queue.length ? state.queue[state.queue.length - 1] : state.dir;
+    if (nd.x === -last.x && nd.y === -last.y) return;   /* no 180° reversal */
+    if (state.queue.length < 3) state.queue.push(nd);
+    if (state.mode === 'idle' || state.mode === 'over') start();
+  }
+
+  /* ---------- render ---------- */
+  function cellRect(x, y, inset, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x * CELL + inset, y * CELL + inset, CELL - inset * 2, CELL - inset * 2);
+  }
+  function render() {
+    ctx.clearRect(0, 0, COLS * CELL, ROWS * CELL);
+    /* faint grid */
+    ctx.strokeStyle = 'rgba(57,255,110,0.06)';
+    ctx.lineWidth = 1;
+    for (var g = 1; g < COLS; g++) {
+      ctx.beginPath(); ctx.moveTo(g * CELL, 0); ctx.lineTo(g * CELL, ROWS * CELL); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, g * CELL); ctx.lineTo(COLS * CELL, g * CELL); ctx.stroke();
+    }
+    /* food */
+    var fx = state.food.x * CELL + CELL / 2, fy = state.food.y * CELL + CELL / 2;
+    ctx.beginPath();
+    ctx.arc(fx, fy, CELL * (state.golden ? 0.38 : 0.32), 0, Math.PI * 2);
+    ctx.fillStyle = state.golden ? '#ffd24d' : '#ff4d57';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(fx - 2, fy - 3, CELL * 0.09, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.fill();
+    /* snake */
+    for (var i = state.snake.length - 1; i >= 0; i--) {
+      var s = state.snake[i];
+      if (i === 0) {
+        cellRect(s.x, s.y, 1.5, '#7dff9e');
+        ctx.fillStyle = '#050807';
+        var ex = s.x * CELL + CELL / 2 + state.dir.x * 4, ey = s.y * CELL + CELL / 2 + state.dir.y * 4;
+        ctx.fillRect(ex - 1.5, ey - 1.5, 3, 3);
+      } else {
+        cellRect(s.x, s.y, 2, i % 2 ? '#2fd45f' : '#39ff6e');
+      }
+    }
+    /* overlays */
+    if (state.mode === 'pause' || state.mode === 'idle' || state.mode === 'over') {
+      ctx.fillStyle = 'rgba(5,8,7,0.72)';
+      ctx.fillRect(0, 0, COLS * CELL, ROWS * CELL);
+      ctx.fillStyle = state.mode === 'over' ? '#ff4d57' : '#39ff6e';
+      ctx.font = 'bold 26px "Segoe UI", system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      var line = state.mode === 'over' ? T.overTitle : state.mode === 'pause' ? T.pauseTitle : T.idleTitle;
+      ctx.fillText(line, COLS * CELL / 2, ROWS * CELL / 2 - 8);
+      ctx.fillStyle = '#8fa89a';
+      ctx.font = '15px "Segoe UI", system-ui, sans-serif';
+      ctx.fillText(T.overSub, COLS * CELL / 2, ROWS * CELL / 2 + 20);
+    }
+    el.score.textContent = fmt(state.score);
+    el.best.textContent = fmt(state.best);
+  }
+
+  /* ---------- input ---------- */
+  var KEYMAP = {
+    ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 }, ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 },
+    w: { x: 0, y: -1 }, s: { x: 0, y: 1 }, a: { x: -1, y: 0 }, d: { x: 1, y: 0 },
+    W: { x: 0, y: -1 }, S: { x: 0, y: 1 }, A: { x: -1, y: 0 }, D: { x: 1, y: 0 }
+  };
+  document.addEventListener('keydown', function (e) {
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (KEYMAP[e.key]) { e.preventDefault(); steer(KEYMAP[e.key]); }
+    else if (e.code === 'Space') { e.preventDefault(); state.mode === 'run' ? pause() : start(); }
+    else if (e.code === 'Enter') { e.preventDefault(); start(); }
+  });
+  /* swipe: steer · tap: start/pause */
+  var tx = 0, ty = 0;
+  canvas.addEventListener('touchstart', function (e) {
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+  canvas.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) < 18 && Math.abs(dy) < 18) { state.mode === 'run' ? pause() : start(); }
+    else if (Math.abs(dx) > Math.abs(dy)) steer({ x: dx > 0 ? 1 : -1, y: 0 });
+    else steer({ x: 0, y: dy > 0 ? 1 : -1 });
+    e.preventDefault();
+  }, { passive: false });
+
+  el.btnStart.addEventListener('click', function () { state.mode === 'run' ? pause() : start(); });
+  el.btnSound.addEventListener('click', function () {
+    state.sound = !state.sound; save(); renderHud();
+  });
+  el.btnNew.addEventListener('click', function () {
+    clearTimeout(timer); state.mode = 'idle'; reset(); say(T.reset);
+  });
+  function renderHud() {
+    el.btnSound.textContent = state.sound ? T.soundOn : T.soundOff;
+  }
+
+  /* ---------- init ---------- */
+  load();
+  canvas = $('#board');
+  ctx = canvas.getContext('2d');
+  var dpr = Math.min(2, window.devicePixelRatio || 1);
+  canvas.width = COLS * CELL * dpr;
+  canvas.height = ROWS * CELL * dpr;
+  ctx.scale(dpr, dpr);
+  el.score = $('#score'); el.best = $('#best');
+  el.msg = $('#message');
+  el.btnStart = $('#btn-start'); el.btnSound = $('#btn-sound'); el.btnNew = $('#btn-new');
+  reset(); renderHud();
+  say(T.start);
+})();
+
+</script>
+</body>
+</html>

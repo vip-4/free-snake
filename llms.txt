@@ -1,0 +1,28 @@
+# Snake Game Online
+
+> The classic Snake game in the browser, in vanilla JavaScript and HTML5 Canvas: 24×24 grid, arrow keys or swipe steering, red apples worth 10 points, golden apples worth 50, the snake speeds up as it grows. Classic rules — hitting a wall or your own tail ends the run. Free, no download, no ads, bilingual English / 简体中文, zero dependencies.
+> 浏览器里的经典贪吃蛇，原生 JavaScript + HTML5 Canvas：24×24 网格，方向键或滑动转向，红苹果10分、金苹果50分，蛇越吃越快。经典规则——撞墙或撞到自己即结束。免费、无需下载、无广告，英文/简体中文双语，零依赖。
+
+## Play 游戏
+
+- [Snake Game Online (English)](https://vip-4.github.io/free-snake/): arrow keys or WASD to steer, Space to pause, Enter to start
+- [贪吃蛇在线版（简体中文）](https://vip-4.github.io/free-snake/zh/): 方向键或WASD转向，空格暂停，回车开始
+
+## Game facts 游戏要点
+
+- 24×24 grid, classic rules with no wrap-around: walls and your own tail both end the run
+- 24×24 网格，经典规则无穿墙：撞墙与撞到自己都会结束本局
+- Red apple +10 points and +1 segment; golden apple +50 points appears regularly; speed rises about 3 ms per apple, from 140 ms to 70 ms per step
+- 红苹果+10分并变长一节；金苹果+50分定期出现；每个苹果加速约3毫秒，步进从140毫秒快至70毫秒
+- Steering: arrow keys, WASD, or touch swipes; 180° reversals are ignored; Space pauses; tap starts or pauses on touch devices
+- 转向：方向键、WASD 或触屏滑动；自动忽略180°掉头；空格暂停；触屏点击开始或暂停
+- High score and settings are saved only in the player's own browser via localStorage — nothing is uploaded, no tracking
+- 最高分与设置仅保存在玩家自己的浏览器（localStorage）——绝不上传、无追踪
+- Entertainment only; a fan-made classic snake implementation in pure HTML5
+- 仅供娱乐；纯 HTML5 实现的经典贪吃蛇复刻
+
+## Mirrors 镜像仓库
+
+- [GitHub](https://github.com/vip-4/free-snake): canonical source and live site host
+- [Gitee](https://gitee.com/vip882/free-snake): mirror for mainland-China readers
+- [AtomGit](https://atomgit.com/zzw1208/free-snake): mirror for mainland-China readers

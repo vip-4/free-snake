@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game Online – Free Classic Snake, No Download</title>
+    <meta name="description" content="Play the classic Snake game free in your browser. Arrow keys or swipe to steer, eat apples, grow longer, chase your high score. No download, no ads, mobile friendly.">
+    <meta name="keywords" content="snake game, snake game online, free snake game, play snake, classic snake, google snake, snake io alternative, retro snake, arcade snake, browser snake game, html5 snake, no download games, free online games, 贪吃蛇">
+    <meta name="author" content="Free Snake Game Online">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#050807">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="canonical" href="https://vip-4.github.io/free-snake/">
+    <link rel="alternate" hreflang="en" href="https://vip-4.github.io/free-snake/">
+    <link rel="alternate" hreflang="zh-Hans" href="https://vip-4.github.io/free-snake/zh/">
+    <link rel="alternate" hreflang="x-default" href="https://vip-4.github.io/free-snake/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Free Snake Game Online">
+    <meta property="og:title" content="Snake Game Online – Free Classic Snake, No Download">
+    <meta property="og:description" content="Classic Snake in your browser: arrow keys or swipe, eat apples, grow longer, chase your high score. No download, no ads, mobile friendly.">
+    <meta property="og:url" content="https://vip-4.github.io/free-snake/">
+    <meta property="og:image" content="https://vip-4.github.io/free-snake/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Green pixel snake on a dark grid chasing a red apple, with a glowing SNAKE title above">
+    <meta property="og:image:secure_url" content="https://vip-4.github.io/free-snake/assets/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="zh_CN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Snake Game Online – Free Classic Snake">
+    <meta name="twitter:description" content="Classic Snake in your browser. Arrow keys or swipe, eat apples, grow longer. No download, no ads.">
+    <meta name="twitter:image" content="https://vip-4.github.io/free-snake/assets/og-image.png">
+    <meta name="twitter:image:alt" content="Green pixel snake chasing a red apple on a dark grid">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="assets/icon-180.png">
+    <link rel="manifest" href="manifest.json">
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #050807;
+  --panel: #0a1410;
+  --green: #39ff6e;
+  --green-dim: #1f7a3d;
+  --red: #ff4d57;
+  --gold: #ffd24d;
+  --text: #d8e8dc;
+  --dim: #8fa89a;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+a { color: var(--green); }
+a:hover { color: #7dff9e; }
+
+header.site {
+  border-bottom: 1px solid var(--green-dim);
+  padding: 18px 0 14px;
+  background: linear-gradient(180deg, #0c1a12 0%, var(--bg) 100%);
+}
+header.site .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+header.site h1 a { color: var(--green); text-decoration: none; font-size: 1.25rem; }
+nav.toc a { margin-left: 14px; font-size: .93rem; text-decoration: none; }
+nav.toc a:first-child { margin-left: 0; }
+
+/* Board */
+.board-frame {
+  background: linear-gradient(180deg, #0e2418 0%, var(--panel) 100%);
+  border: 2px solid var(--green-dim);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 26px 0 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.5), inset 0 0 0 3px rgba(57,255,110,.08);
+}
+.board-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.stat { font-size: 1.02rem; color: var(--dim); }
+.stat strong { color: var(--green); font-variant-numeric: tabular-nums; font-size: 1.15rem; }
+
+#board {
+  display: block; margin: 0 auto;
+  width: 480px; max-width: 100%;
+  height: auto; aspect-ratio: 1 / 1;
+  background: #050807;
+  border: 2px solid var(--green-dim);
+  border-radius: 10px;
+  touch-action: none;
+}
+
+.board-controls { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.btn {
+  background: var(--green); color: #050807; border: none; border-radius: 12px;
+  padding: 12px 28px; font: inherit; font-size: 1.05rem; font-weight: 800; letter-spacing: 1px; cursor: pointer;
+  box-shadow: 0 4px 0 #1f7a3d;
+}
+.btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #1f7a3d; }
+.btn.secondary { background: #10261a; color: var(--text); box-shadow: 0 4px 0 #081209; padding: 10px 16px; font-size: .95rem; }
+.btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+#message { text-align: center; min-height: 1.4em; margin: 12px 0 2px; font-weight: 700; }
+#message.win { color: var(--gold); }
+#message.lose { color: var(--red); }
+.stage-hint { text-align: center; color: var(--dim); font-size: .9rem; margin-bottom: 8px; }
+kbd {
+  background: #10261a; border: 1px solid var(--green-dim); border-bottom-width: 2px;
+  border-radius: 5px; padding: 1px 7px; font-family: Consolas, monospace; font-size: .88em;
+}
+
+main section { margin: 44px 0; }
+h2 { color: var(--green); font-size: 1.45rem; margin-bottom: 12px; }
+.content { color: var(--dim); max-width: 800px; }
+.content p { margin: 10px 0; }
+ol, ul { padding-left: 1.4rem; margin: 10px 0; }
+li { margin: 4px 0; }
+dl.controls > div, dl.faq > div { margin-bottom: 16px; }
+dl.controls dt { font-weight: 700; color: var(--green); }
+dl.controls dd, dl.faq dd { color: var(--dim); }
+dl.faq dt { font-weight: 700; color: var(--text); }
+table.score-table { border-collapse: collapse; width: 100%; max-width: 640px; font-size: .98rem; margin: 10px 0; }
+table.score-table th, table.score-table td { padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--green-dim); }
+table.score-table thead th { color: var(--green); border-bottom: 2px solid var(--green-dim); }
+table.score-table td:last-child, table.score-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.notice {
+  border: 1px solid var(--green-dim); border-left: 4px solid var(--green);
+  border-radius: 10px; padding: 12px 16px; background: rgba(57,255,110,.05); max-width: 800px;
+}
+.keyline { color: var(--dim); font-size: .95rem; }
+
+footer.site {
+  border-top: 1px solid var(--green-dim); margin-top: 48px; padding: 26px 6px;
+  color: var(--dim); font-size: .93rem; text-align: center;
+}
+.lang-nav { font-size: .95rem; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 0; background: var(--green); color: #050807;
+  padding: 8px 14px; border-radius: 0 0 8px 0; z-index: 10; font-weight: 700;
+}
+.skip-link:focus { left: 0; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+</style>
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://vip-4.github.io/free-snake/#website",
+        "url": "https://vip-4.github.io/free-snake/",
+        "name": "Free Snake Game Online",
+        "inLanguage": ["en", "zh-Hans"],
+        "publisher": { "@id": "https://vip-4.github.io/free-snake/#org" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://vip-4.github.io/free-snake/#org",
+        "name": "Free Snake Game Online",
+        "url": "https://vip-4.github.io/free-snake/",
+        "logo": { "@type": "ImageObject", "url": "https://vip-4.github.io/free-snake/favicon.svg" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": "https://vip-4.github.io/free-snake/#webpage",
+        "url": "https://vip-4.github.io/free-snake/",
+        "name": "Snake Game Online – Free Classic Snake, No Download",
+        "description": "Play the classic Snake game free in your browser. Arrow keys or swipe to steer, eat apples, grow longer, chase your high score. No download, no ads, mobile friendly.",
+        "isPartOf": { "@id": "https://vip-4.github.io/free-snake/#website" },
+        "inLanguage": "en",
+        "about": { "@id": "https://vip-4.github.io/free-snake/#game" },
+        "primaryImageOfPage": { "@id": "https://vip-4.github.io/free-snake/#primaryimage" },
+        "significantLink": "https://vip-4.github.io/free-snake/zh/"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "ImageObject",
+        "@id": "https://vip-4.github.io/free-snake/#primaryimage",
+        "url": "https://vip-4.github.io/free-snake/assets/og-image.png",
+        "width": 1200,
+        "height": 630,
+        "caption": "Green pixel snake on a dark grid chasing a red apple, with a glowing SNAKE title above"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "@id": "https://vip-4.github.io/free-snake/#game",
+        "name": "Snake Game Online",
+        "alternateName": ["Free Snake Game", "Classic Snake Browser Game", "贪吃蛇在线版"],
+        "description": "A free browser-based classic Snake game on a 24×24 grid. Steer with arrow keys, WASD or touch swipes, eat apples to grow longer and score points, golden apples are worth 50, and the snake speeds up as it grows. Classic rules: hitting a wall or your own tail ends the run. High score is saved locally in your browser. No download, no registration, no ads, no real money.",
+        "url": "https://vip-4.github.io/free-snake/",
+        "genre": ["Arcade", "Casual", "Retro"],
+        "gamePlatform": "Web Browser",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any (HTML5 browser)",
+        "playMode": "SinglePlayer",
+        "datePublished": "2026-10-28",
+        "dateModified": "2026-10-28",
+        "inLanguage": ["en", "zh-Hans"],
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "image": { "@id": "https://vip-4.github.io/free-snake/#primaryimage" },
+        "thumbnailUrl": "https://vip-4.github.io/free-snake/favicon.svg",
+        "publisher": { "@id": "https://vip-4.github.io/free-snake/#org" },
+        "mainEntityOfPage": { "@id": "https://vip-4.github.io/free-snake/#webpage" },
+        "controlMethod": ["Keyboard", "Touch"],
+        "controllerInput": ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "W", "A", "S", "D", "Space", "Enter"],
+        "numberOfPlayers": 1,
+        "gameLocation": {
+          "@type": "VirtualLocation",
+          "url": "https://vip-4.github.io/free-snake/"
+        },
+        "softwareRequirements": "JavaScript enabled, HTML5 compatible browser",
+        "storageRequirements": "No storage required (high score saved in localStorage)",
+        "accessibilityFeature": ["KeyboardControl", "HighContrast", "ScreenReaderCompatible"],
+        "accessibilityControl": ["Keyboard", "Touch"],
+        "accessibilitySummary": "Fully playable with a keyboard (arrow keys or WASD, Space to pause, Enter to start). Game state messages are announced via ARIA live regions, and all rules are available as plain text.",
+        "keywords": ["snake game", "classic snake", "free snake", "browser game", "html5 game", "arcade", "贪吃蛇"]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this snake game really free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. This online snake game is 100% free to play in any modern browser. There are no downloads, no registration, no ads, and no in-game purchases." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I control the snake?",
+            "acceptedAnswer": { "@type": "Answer", "text": "On desktop use the arrow keys or WASD to steer, Space to pause, and Enter to start or restart. On a phone or tablet, swipe in the direction you want the snake to go and tap the board to pause or start." }
+          },
+          {
+            "@type": "Question",
+            "name": "How does scoring work in this snake game?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Each red apple is worth 10 points and makes the snake grow longer. Every fifth food spawns a golden apple worth 50 points. The snake also moves faster with each apple eaten, so risk and reward rise together." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the snake game work on my phone?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The game is mobile-first and responsive: swipe anywhere on the board to steer and tap to pause or start, on iOS or Android. The board scales to fit your screen." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my high score saved?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Your best score and sound preference are saved in your own browser via localStorage. Nothing is uploaded, no account is needed, and no personal data is collected." }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens when the snake hits a wall or itself?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The run ends immediately — classic rules with no wrap-around. Your score and best score are shown, and you can press Enter or tap the board to start a fresh run." }
+          }
+        ]
+      }
+    ]
+    </script>
+</head>
+<body>
+<a class="skip-link" href="#game">Skip to game</a>
+<header class="site">
+    <div class="wrap">
+        <h1><a href="https://vip-4.github.io/free-snake/">Snake Game Online</a></h1>
+        <nav class="toc" aria-label="Page navigation">
+            <a href="#game">Play</a>
+            <a href="#how-to">How to Play</a>
+            <a href="#scoring">Scoring</a>
+            <a href="#about">About</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+    </div>
+</header>
+
+<main class="wrap">
+    <p class="keyline">The classic Snake game in your browser — eat apples, grow longer, don't crash. Free, no download, no ads, keyboard and touch.</p>
+
+    <section id="game" aria-label="Snake game">
+        <div class="board-frame" role="group" aria-label="Snake game board">
+            <div class="board-top">
+                <span class="stat">Score: <strong id="score">0</strong></span>
+                <span class="stat">Best: <strong id="best">0</strong></span>
+            </div>
+            <canvas id="board" width="480" height="480" aria-label="Snake game board. Use arrow keys to steer the green snake toward the red apple."></canvas>
+            <div class="board-controls">
+                <button type="button" class="btn" id="btn-start">Start / Pause</button>
+                <button type="button" class="btn secondary" id="btn-sound">Sound: On</button>
+                <button type="button" class="btn secondary" id="btn-new">New Game</button>
+            </div>
+            <p id="message" class="message" role="status" aria-live="polite">Press an arrow key or Enter to start.</p>
+        </div>
+        <p class="stage-hint"><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> or <kbd>WASD</kbd> steer · <kbd>Space</kbd> pause · swipe on touch</p>
+    </section>
+
+    <section id="how-to">
+        <h2>How to Play Snake</h2>
+        <dl class="controls content">
+            <div><dt>1. Start</dt><dd>Press any arrow key, <kbd>Enter</kbd>, or tap the board. The snake moves right by default.</dd></div>
+            <div><dt>2. Steer</dt><dd><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> turn the snake. On touch screens, swipe in the direction you want. 180° reversals are ignored so you can't crash into yourself by accident.</dd></div>
+            <div><dt>3. Eat</dt><dd>Guide the snake to red apples — each one grows the snake by one segment and adds 10 points. Golden apples appear regularly and are worth 50.</dd></div>
+            <div><dt>4. Survive</dt><dd>The snake speeds up with every apple. Hitting a wall or your own tail ends the run — classic rules, no wrap-around. <kbd>Space</kbd> pauses at any time.</dd></div>
+        </dl>
+    </section>
+
+    <section id="scoring">
+        <h2>Scoring &amp; Rules</h2>
+        <table class="score-table">
+            <caption class="sr-only">Snake game scoring: item, points, effect</caption>
+            <thead><tr><th scope="col">Item</th><th scope="col">Points</th><th scope="col">Effect</th></tr></thead>
+            <tbody>
+                <tr><td>🍎 Red apple</td><td>+10</td><td>Grow 1 segment, speed up slightly</td></tr>
+                <tr><td>⭐ Golden apple</td><td>+50</td><td>Appears regularly, same growth</td></tr>
+                <tr><td>🧱 Wall or self hit</td><td>—</td><td>Run ends, best score is saved</td></tr>
+            </tbody>
+        </table>
+        <p class="content keyline">Grid: 24 × 24 cells · Speed rises ~3 ms per apple, from 140 ms down to 70 ms per step · High score stored only in your browser.</p>
+    </section>
+
+    <section id="about">
+        <h2>About This Snake Game</h2>
+        <div class="notice content">
+            <p><strong>Zero everything.</strong> This is a single-page vanilla JavaScript game — no frameworks, no tracking, no accounts, no ads. It runs entirely in your browser and works offline once loaded.</p>
+            <p><strong>Your data stays with you.</strong> The high score and settings live in your browser's localStorage. Nothing is uploaded, ever.</p>
+            <p><strong>For everyone.</strong> Fully keyboard playable, high-contrast palette, screen-reader friendly status messages, and touch controls for phones and tablets.</p>
+        </div>
+    </section>
+
+    <section id="faq">
+        <h2>Snake Game FAQ</h2>
+        <dl class="faq content">
+            <div><dt>Is this snake game really free?</dt><dd>Yes. This online snake game is 100% free to play in any modern browser. There are no downloads, no registration, no ads, and no in-game purchases.</dd></div>
+            <div><dt>How do I control the snake?</dt><dd>On desktop use the arrow keys or WASD to steer, Space to pause, and Enter to start or restart. On a phone or tablet, swipe in the direction you want the snake to go and tap the board to pause or start.</dd></div>
+            <div><dt>How does scoring work in this snake game?</dt><dd>Each red apple is worth 10 points and makes the snake grow longer. Every fifth food spawns a golden apple worth 50 points. The snake also moves faster with each apple eaten, so risk and reward rise together.</dd></div>
+            <div><dt>Does the snake game work on my phone?</dt><dd>Yes. The game is mobile-first and responsive: swipe anywhere on the board to steer and tap to pause or start, on iOS or Android. The board scales to fit your screen.</dd></div>
+            <div><dt>Is my high score saved?</dt><dd>Yes. Your best score and sound preference are saved in your own browser via localStorage. Nothing is uploaded, no account is needed, and no personal data is collected.</dd></div>
+            <div><dt>What happens when the snake hits a wall or itself?</dt><dd>The run ends immediately — classic rules with no wrap-around. Your score and best score are shown, and you can press Enter or tap the board to start a fresh run.</dd></div>
+        </dl>
+    </section>
+</main>
+
+<footer class="site" role="contentinfo">
+    <p>Free Snake Game Online is an entertainment HTML5 game built with semantic HTML and vanilla JavaScript — zero dependencies, mobile friendly, no tracking.</p>
+    <p class="lang-nav">🌐 Languages: <a href="https://vip-4.github.io/free-snake/zh/" hreflang="zh-Hans">中文版（贪吃蛇在线玩）</a></p>
+    <p>© 2026 Free Snake Game Online · For entertainment only · No download, no ads</p>
+</footer>
+
+<script>
+window.SNAKE_I18N = {
+  start: "Press an arrow key or Enter to start.",
+  idleTitle: "SNAKE",
+  overTitle: "GAME OVER",
+  overSub: "Press Enter or tap to restart",
+  pauseTitle: "PAUSED",
+  pauseHint: "Good luck! Space pauses.",
+  paused: "Paused — Space or tap to resume.",
+  ate: "Apple! +{gain} points.",
+  golden: "Golden apple! +{gain} points!",
+  gameOver: "Game over — score {score}. Best: {best}.",
+  reset: "Fresh board. Press an arrow key to start.",
+  soundOn: "Sound: On", soundOff: "Sound: Off"
+};
+</script>
+<script defer>
+/* Free Snake Game — vanilla JS, zero dependencies
+   24×24 grid, classic rules (walls + self collision), keyboard + swipe, virtual only */
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var T = window.SNAKE_I18N;
+
+  var COLS = 24, ROWS = 24, CELL = 20;        /* canvas 480×480 */
+  var BASE_MS = 140, MIN_MS = 70, SPEEDUP = 3; /* ms per step, faster per food */
+  var START_LEN = 3;
+
+  var state = {
+    snake: [], dir: { x: 1, y: 0 }, queue: [],
+    food: { x: 0, y: 0 }, golden: false,
+    score: 0, best: 0, eaten: 0,
+    mode: 'idle',               /* idle | run | pause | over */
+    sound: true, ms: BASE_MS
+  };
+  var timer = null;
+
+  var canvas, ctx;
+  var el = {};
+  var audio = null;
+
+  /* ---------- persistence ---------- */
+  function load() {
+    try {
+      var b = parseInt(localStorage.getItem('snake_best'), 10);
+      if (b >= 0 && b <= 1000000) state.best = b;
+      if (localStorage.getItem('snake_sound') === '0') state.sound = false;
+    } catch (e) { /* storage unavailable */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem('snake_best', String(state.best));
+      localStorage.setItem('snake_sound', state.sound ? '1' : '0');
+    } catch (e) { /* storage unavailable */ }
+  }
+  function fmt(n) { return Number(n).toLocaleString(); }
+  function say(text, cls) {
+    el.msg.textContent = text;
+    el.msg.className = 'message' + (cls ? ' ' + cls : '');
+  }
+
+  /* ---------- audio ---------- */
+  function beep(freq, dur, type) {
+    if (!state.sound) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      var o = audio.createOscillator(), g = audio.createGain();
+      o.type = type || 'square'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.04, audio.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + dur);
+      o.connect(g); g.connect(audio.destination);
+      o.start(); o.stop(audio.currentTime + dur);
+    } catch (e) { /* audio unavailable */ }
+  }
+
+  /* ---------- game core ---------- */
+  function reset() {
+    state.snake = [{ x: 8, y: 12 }, { x: 7, y: 12 }, { x: 6, y: 12 }];
+    state.dir = { x: 1, y: 0 };
+    state.queue = [];
+    state.score = 0; state.eaten = 0; state.ms = BASE_MS;
+    placeFood();
+    render();
+  }
+  function free(x, y) {
+    for (var i = 0; i < state.snake.length; i++)
+      if (state.snake[i].x === x && state.snake[i].y === y) return false;
+    return true;
+  }
+  function placeFood() {
+    var x, y;
+    do { x = Math.floor(Math.random() * COLS); y = Math.floor(Math.random() * ROWS); } while (!free(x, y));
+    state.food = { x: x, y: y };
+    state.golden = state.eaten > 0 && state.eaten % 5 === 4 ? false : Math.random() < 0.1;
+  }
+  function start() {
+    if (state.mode === 'run') return;
+    if (state.mode === 'over' || state.mode === 'idle') reset();
+    state.mode = 'run';
+    say(T.pauseHint);
+    render();
+    schedule();
+  }
+  function schedule() {
+    clearTimeout(timer);
+    timer = setTimeout(step, state.ms);
+  }
+  function pause() {
+    if (state.mode !== 'run') return;
+    state.mode = 'pause';
+    clearTimeout(timer);
+    say(T.paused);
+    render();
+  }
+  function resume() {
+    if (state.mode !== 'pause') return;
+    state.mode = 'run';
+    say(T.pauseHint);
+    render();
+    schedule();
+  }
+  function gameOver() {
+    state.mode = 'over';
+    clearTimeout(timer);
+    if (state.score > state.best) { state.best = state.score; save(); }
+    beep(330, 0.12); setTimeout(function () { beep(220, 0.18); }, 110); setTimeout(function () { beep(147, 0.25); }, 240);
+    say(T.gameOver.replace('{score}', fmt(state.score)).replace('{best}', fmt(state.best)), 'lose');
+    render();
+  }
+  function step() {
+    if (state.mode !== 'run') return;
+    if (state.queue.length) state.dir = state.queue.shift();
+    var head = { x: state.snake[0].x + state.dir.x, y: state.snake[0].y + state.dir.y };
+    var hitWall = head.x < 0 || head.y < 0 || head.x >= COLS || head.y >= ROWS;
+    var hitSelf = false;
+    for (var i = 0; i < state.snake.length - 1; i++)
+      if (state.snake[i].x === head.x && state.snake[i].y === head.y) { hitSelf = true; break; }
+    if (hitWall || hitSelf) { gameOver(); return; }
+
+    state.snake.unshift(head);
+    if (head.x === state.food.x && head.y === state.food.y) {
+      var gain = state.golden ? 50 : 10;
+      state.score += gain;
+      state.eaten++;
+      state.ms = Math.max(MIN_MS, state.ms - SPEEDUP);
+      if (state.golden) { beep(880, 0.1, 'triangle'); setTimeout(function () { beep(1175, 0.12, 'triangle'); }, 90); }
+      else beep(660, 0.07);
+      say(state.golden ? T.golden.replace('{gain}', String(gain)) : T.ate.replace('{gain}', String(gain)));
+      placeFood();
+    } else {
+      state.snake.pop();
+    }
+    render();
+    schedule();
+  }
+  function steer(nd) {
+    var last = state.queue.length ? state.queue[state.queue.length - 1] : state.dir;
+    if (nd.x === -last.x && nd.y === -last.y) return;   /* no 180° reversal */
+    if (state.queue.length < 3) state.queue.push(nd);
+    if (state.mode === 'idle' || state.mode === 'over') start();
+  }
+
+  /* ---------- render ---------- */
+  function cellRect(x, y, inset, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x * CELL + inset, y * CELL + inset, CELL - inset * 2, CELL - inset * 2);
+  }
+  function render() {
+    ctx.clearRect(0, 0, COLS * CELL, ROWS * CELL);
+    /* faint grid */
+    ctx.strokeStyle = 'rgba(57,255,110,0.06)';
+    ctx.lineWidth = 1;
+    for (var g = 1; g < COLS; g++) {
+      ctx.beginPath(); ctx.moveTo(g * CELL, 0); ctx.lineTo(g * CELL, ROWS * CELL); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, g * CELL); ctx.lineTo(COLS * CELL, g * CELL); ctx.stroke();
+    }
+    /* food */
+    var fx = state.food.x * CELL + CELL / 2, fy = state.food.y * CELL + CELL / 2;
+    ctx.beginPath();
+    ctx.arc(fx, fy, CELL * (state.golden ? 0.38 : 0.32), 0, Math.PI * 2);
+    ctx.fillStyle = state.golden ? '#ffd24d' : '#ff4d57';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(fx - 2, fy - 3, CELL * 0.09, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.fill();
+    /* snake */
+    for (var i = state.snake.length - 1; i >= 0; i--) {
+      var s = state.snake[i];
+      if (i === 0) {
+        cellRect(s.x, s.y, 1.5, '#7dff9e');
+        ctx.fillStyle = '#050807';
+        var ex = s.x * CELL + CELL / 2 + state.dir.x * 4, ey = s.y * CELL + CELL / 2 + state.dir.y * 4;
+        ctx.fillRect(ex - 1.5, ey - 1.5, 3, 3);
+      } else {
+        cellRect(s.x, s.y, 2, i % 2 ? '#2fd45f' : '#39ff6e');
+      }
+    }
+    /* overlays */
+    if (state.mode === 'pause' || state.mode === 'idle' || state.mode === 'over') {
+      ctx.fillStyle = 'rgba(5,8,7,0.72)';
+      ctx.fillRect(0, 0, COLS * CELL, ROWS * CELL);
+      ctx.fillStyle = state.mode === 'over' ? '#ff4d57' : '#39ff6e';
+      ctx.font = 'bold 26px "Segoe UI", system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      var line = state.mode === 'over' ? T.overTitle : state.mode === 'pause' ? T.pauseTitle : T.idleTitle;
+      ctx.fillText(line, COLS * CELL / 2, ROWS * CELL / 2 - 8);
+      ctx.fillStyle = '#8fa89a';
+      ctx.font = '15px "Segoe UI", system-ui, sans-serif';
+      ctx.fillText(T.overSub, COLS * CELL / 2, ROWS * CELL / 2 + 20);
+    }
+    el.score.textContent = fmt(state.score);
+    el.best.textContent = fmt(state.best);
+  }
+
+  /* ---------- input ---------- */
+  var KEYMAP = {
+    ArrowUp: { x: 0, y: -1 }, ArrowDown: { x: 0, y: 1 }, ArrowLeft: { x: -1, y: 0 }, ArrowRight: { x: 1, y: 0 },
+    w: { x: 0, y: -1 }, s: { x: 0, y: 1 }, a: { x: -1, y: 0 }, d: { x: 1, y: 0 },
+    W: { x: 0, y: -1 }, S: { x: 0, y: 1 }, A: { x: -1, y: 0 }, D: { x: 1, y: 0 }
+  };
+  document.addEventListener('keydown', function (e) {
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (KEYMAP[e.key]) { e.preventDefault(); steer(KEYMAP[e.key]); }
+    else if (e.code === 'Space') { e.preventDefault(); state.mode === 'run' ? pause() : start(); }
+    else if (e.code === 'Enter') { e.preventDefault(); start(); }
+  });
+  /* swipe: steer · tap: start/pause */
+  var tx = 0, ty = 0;
+  canvas.addEventListener('touchstart', function (e) {
+    tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+  canvas.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) < 18 && Math.abs(dy) < 18) { state.mode === 'run' ? pause() : start(); }
+    else if (Math.abs(dx) > Math.abs(dy)) steer({ x: dx > 0 ? 1 : -1, y: 0 });
+    else steer({ x: 0, y: dy > 0 ? 1 : -1 });
+    e.preventDefault();
+  }, { passive: false });
+
+  el.btnStart.addEventListener('click', function () { state.mode === 'run' ? pause() : start(); });
+  el.btnSound.addEventListener('click', function () {
+    state.sound = !state.sound; save(); renderHud();
+  });
+  el.btnNew.addEventListener('click', function () {
+    clearTimeout(timer); state.mode = 'idle'; reset(); say(T.reset);
+  });
+  function renderHud() {
+    el.btnSound.textContent = state.sound ? T.soundOn : T.soundOff;
+  }
+
+  /* ---------- init ---------- */
+  load();
+  canvas = $('#board');
+  ctx = canvas.getContext('2d');
+  var dpr = Math.min(2, window.devicePixelRatio || 1);
+  canvas.width = COLS * CELL * dpr;
+  canvas.height = ROWS * CELL * dpr;
+  ctx.scale(dpr, dpr);
+  el.score = $('#score'); el.best = $('#best');
+  el.msg = $('#message');
+  el.btnStart = $('#btn-start'); el.btnSound = $('#btn-sound'); el.btnNew = $('#btn-new');
+  reset(); renderHud();
+  say(T.start);
+})();
+
+</script>
+</body>
+</html>
